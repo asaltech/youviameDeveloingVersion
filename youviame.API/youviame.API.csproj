@@ -276,6 +276,8 @@
     <None Include="Properties\PublishProfiles\youviameapi-Test - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\youviameapi-Test.pubxml" />
     <None Include="Properties\PublishProfiles\youviameAPIDev.pubxml" />
+    <None Include="Properties\PublishProfiles\youviameDeveloping.pubxml" />
+    <None Include="Properties\PublishProfiles\youviameQATesting.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

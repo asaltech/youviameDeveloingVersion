@@ -7,6 +7,8 @@ using System.Web.Http;
 using youviame.Data.Context;
 using youviame.Data.Enitities;
 using youviame.Data.Repositories;
+using System.Net.Mail;
+using System.Text;
 
 namespace youviame.API.Controllers
 {
@@ -39,6 +41,7 @@ namespace youviame.API.Controllers
 
                 _ReportRepository.Save(entity);
                 _logRepository.InsertLog("Report insert successfully");
+                sendEmail();
                 return Request.CreateResponse(HttpStatusCode.Accepted);  
 
             }
@@ -47,6 +50,29 @@ namespace youviame.API.Controllers
                 _logRepository.InsertLog("Report insert failed");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not set report details", e);
             }
+        }
+
+        public void sendEmail()
+        {
+            SmtpClient client = new SmtpClient();
+            client.Port = 587;
+            client.Host = "smtp.gmail.com";
+            client.EnableSsl = true;
+            client.Timeout = 10000;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = true;
+            client.Credentials = new System.Net.NetworkCredential("ranacse94@gmail.com", "ranadontcare");
+            MailMessage mm = new MailMessage("ranacse94@gmail.com", "rjabreen@asaltech.com", "test", "test");
+            mm.BodyEncoding = UTF8Encoding.UTF8;
+            mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+            try
+            {
+                _logRepository.InsertLog("before Sending Email success");
+                client.Send(mm);
+                _logRepository.InsertLog("after Sending Email success");
+            }
+            catch (Exception e) { _logRepository.InsertLog("an error occurred while sending email "+e.Message); }
+
         }
     }
 

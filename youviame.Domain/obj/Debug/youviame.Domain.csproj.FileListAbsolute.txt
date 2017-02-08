@@ -1,0 +1,4 @@
+C:\Users\rjabreen\Documents\youviame.API\youviame.Domain\bin\Debug\youviame.Domain.dll
+C:\Users\rjabreen\Documents\youviame.API\youviame.Domain\bin\Debug\youviame.Domain.pdb
+C:\Users\rjabreen\Documents\youviame.API\youviame.Domain\obj\Debug\youviame.Domain.dll
+C:\Users\rjabreen\Documents\youviame.API\youviame.Domain\obj\Debug\youviame.Domain.pdb

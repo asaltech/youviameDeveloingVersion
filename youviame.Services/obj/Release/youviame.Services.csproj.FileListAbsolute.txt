@@ -1,0 +1,10 @@
+C:\Users\rjabreen\Documents\youviame.API\youviame.Services\bin\Release\youviame.Services.dll
+C:\Users\rjabreen\Documents\youviame.API\youviame.Services\bin\Release\youviame.Services.pdb
+C:\Users\rjabreen\Documents\youviame.API\youviame.Services\bin\Release\Microsoft.Azure.NotificationHubs.dll
+C:\Users\rjabreen\Documents\youviame.API\youviame.Services\bin\Release\Microsoft.WindowsAzure.Configuration.dll
+C:\Users\rjabreen\Documents\youviame.API\youviame.Services\bin\Release\Newtonsoft.Json.dll
+C:\Users\rjabreen\Documents\youviame.API\youviame.Services\bin\Release\Microsoft.Azure.NotificationHubs.xml
+C:\Users\rjabreen\Documents\youviame.API\youviame.Services\bin\Release\Newtonsoft.Json.xml
+C:\Users\rjabreen\Documents\youviame.API\youviame.Services\obj\Release\youviame.Services.dll
+C:\Users\rjabreen\Documents\youviame.API\youviame.Services\obj\Release\youviame.Services.pdb
+C:\Users\rjabreen\Documents\youviame.API\youviame.Services\obj\Release\youviame.Services.csprojResolveAssemblyReference.cache

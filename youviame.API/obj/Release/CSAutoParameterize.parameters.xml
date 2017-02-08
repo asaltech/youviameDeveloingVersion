@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="youviame.Database.ConnectionString-Web.config Connection String" description="youviame.Database.ConnectionString Connection String used in web.config by the application to access the database." defaultValue="Server=tcp:lingodevsqlserver.database.windows.net,1433;Initial Catalog=youviame-Dev_Logs;Persist Security Info=False;User ID=lingodevadmin;Password=Vinter2015;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\rjabreen\\Documents\\youviame\.API\\youviame\.API\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='youviame.Database.ConnectionString']/@connectionString" />
+  </parameter>
+  <parameter name="AuthContext-Web.config Connection String" description="AuthContext Connection String used in web.config by the application to access the database." defaultValue="Server=tcp:lingodevsqlserver.database.windows.net,1433;Initial Catalog=youviame-Dev.Auth_TestingCopy;Persist Security Info=False;User ID=lingodevadmin;Password=Vinter2015;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\rjabreen\\Documents\\youviame\.API\\youviame\.API\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='AuthContext']/@connectionString" />
+  </parameter>
+</parameters>

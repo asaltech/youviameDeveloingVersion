@@ -1,0 +1,7 @@
+C:\Users\rjabreen\Documents\youviame.API\youviame.Common\bin\Debug\youviame.Common.dll
+C:\Users\rjabreen\Documents\youviame.API\youviame.Common\bin\Debug\youviame.Common.pdb
+C:\Users\rjabreen\Documents\youviame.API\youviame.Common\bin\Debug\Microsoft.Practices.Unity.dll
+C:\Users\rjabreen\Documents\youviame.API\youviame.Common\bin\Debug\Microsoft.Practices.Unity.xml
+C:\Users\rjabreen\Documents\youviame.API\youviame.Common\obj\Debug\youviame.Common.csprojResolveAssemblyReference.cache
+C:\Users\rjabreen\Documents\youviame.API\youviame.Common\obj\Debug\youviame.Common.dll
+C:\Users\rjabreen\Documents\youviame.API\youviame.Common\obj\Debug\youviame.Common.pdb

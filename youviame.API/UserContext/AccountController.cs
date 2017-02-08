@@ -23,9 +23,11 @@ namespace youviame.API.UserContext {
     public class AccountController : ApiController {
         private readonly IUserRepository _userRepository;
         private AuthRepository _repo = null;
-
-        public AccountController(IUserRepository userRepository) {
+        private readonly ILogRepository _logRepository;
+        public AccountController(IUserRepository userRepository, ILogRepository logRepository)
+        {
             _userRepository = userRepository;
+            _logRepository = logRepository;
             _repo = new AuthRepository();
         }
 
@@ -33,12 +35,14 @@ namespace youviame.API.UserContext {
         [HttpPost]
         [Route("LoginExternal")]
         public async Task<IHttpActionResult> LoginExternal(RegisterExternalBindingModel model) {
+            _logRepository.InsertLog("LoginExternal requested ");
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
 
             var verifiedAccessToken = await VerifyExternalAccessToken(model.Provider, model.ExternalAccessToken);
             if (verifiedAccessToken == null) {
+                _logRepository.InsertLog("LoginExternal requested return Invalid Provider ");
                 return BadRequest("Invalid Provider or External Access Token");
             }
             IdentityUser user = null;

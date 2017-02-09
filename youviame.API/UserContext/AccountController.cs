@@ -40,6 +40,7 @@ namespace youviame.API.UserContext {
                 return BadRequest(ModelState);
             }
 
+            _logRepository.InsertLog("before  VerifyExternalAccessToken ");
             var verifiedAccessToken = await VerifyExternalAccessToken(model.Provider, model.ExternalAccessToken);
             if (verifiedAccessToken == null) {
                 _logRepository.InsertLog("LoginExternal requested return Invalid Provider ");
@@ -129,11 +130,16 @@ namespace youviame.API.UserContext {
         private async Task<User> CreateProfile(string provider, string accessToken) {
             User user = null;
             if (provider != "Facebook")
+            {
+                _logRepository.InsertLog("ptovider equal null in create profile");
                 return null;
+            }
             user = new User();
             user.DateModeEnabled = true;
             var facebookClient = new FacebookClient(accessToken) { Version = "v2.8" };
+            _logRepository.InsertLog("before get facebook profile data");
             var facebookUserData = await facebookClient.GetTaskAsync("me?fields=id,first_name,last_name,albums.limit(10){id,type},about,location,picture.width(300).height(300)");
+            _logRepository.InsertLog("after get facebook profile data");
             var facebookProfileJsonString = JsonConvert.SerializeObject(facebookUserData);
             var facebookProfile = JsonConvert.DeserializeObject<FacebookProfile>(facebookProfileJsonString);
             user.FacebookId = facebookProfile.Id;
@@ -146,15 +152,18 @@ namespace youviame.API.UserContext {
             var images = new List<Image>();
             //  var profileAlbum = facebookProfile.Albums?.Data?.FirstOrDefault(x => x.Type == "profile");
             //if
+            _logRepository.InsertLog("  facebook profile album start");
             var Album = facebookProfile.Albums;
             var AlbumData = Album != null ? Album.Data : null;
             var profileAlbum = AlbumData != null ? facebookProfile.Albums.Data.FirstOrDefault(x => x.Type == "profile") :null;
             if (profileAlbum != null) {
+                _logRepository.InsertLog("  facebook profile album not equal null");
                 //var profilePicturesData = await facebookClient.GetTaskAsync($"{profileAlbum.Id}/photos?fields=picture.width(300).height(300)");
                 var profilePicturesData = await facebookClient.GetTaskAsync(String.Format("{0}/photos?fields=picture.width(300).height(300)", profileAlbum.Id));
                 var profilePicturesJsonString = JsonConvert.SerializeObject(profilePicturesData);
                 var profilePictures = JsonConvert.DeserializeObject<AlbumPictures>(profilePicturesJsonString);
                 foreach (var profilePicture in profilePictures.Data) {
+                    _logRepository.InsertLog(" inside profilepictures data");
                     var image = new Image {
                         Id = profilePicture.Id,
                         Url = profilePicture.Picture
@@ -164,14 +173,18 @@ namespace youviame.API.UserContext {
             }
 
             if (images.Count == 0) {
+                _logRepository.InsertLog(" images count equal 0 get profilepicture instead");
                 var profilePic = new Image {
                     Id = "profilePicture",
                     Url = facebookProfile.Picture.Data.Url
                 };
                 images.Add(profilePic);
             }
+            _logRepository.InsertLog(" take 4 images if there  ");
             user.SetProfilePictures(images.Take(4).ToList());
+            _logRepository.InsertLog(" before save user  ");
             await _userRepository.SaveAsync(user);
+            _logRepository.InsertLog(" after save user  ");
             return user;
         }
 

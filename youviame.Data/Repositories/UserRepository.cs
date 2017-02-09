@@ -14,6 +14,7 @@ namespace youviame.Data.Repositories {
         }
 
         public User Get(Guid id) {
+           
             return _context.Users.Find(id);
         }
 

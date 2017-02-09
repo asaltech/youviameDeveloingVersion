@@ -195,7 +195,6 @@
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\DoubleExtensions.cs" />
     <Compile Include="Controllers\EditProfileModel.cs" />
-    <Compile Include="Controllers\Email.cs" />
     <Compile Include="Controllers\FacebookFriendData.cs" />
     <Compile Include="Controllers\FriendsViewModel.cs" />
     <Compile Include="Controllers\HMACAuthenticationAttribute.cs" />

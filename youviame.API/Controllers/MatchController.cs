@@ -112,12 +112,13 @@ namespace youviame.API.Controllers {
                 match = _matchRepository.Get(request.MatchId);
                 if (match.MatchMakerStatus == MatchMakerStatus.DatePlanned)
                 {
-                    var message = match.MatchMaker.FirstName + " " + match.MatchMaker.LastName + "\n bestämmer att du och" + match.DatePerson2.FirstName + " " + match.DatePerson2.LastName + "\nska gå till";
+                   // var message = match.MatchMaker.FirstName + " " + match.MatchMaker.LastName + "\n bestämmer att du och" + match.DatePerson2.FirstName + " " + match.DatePerson2.LastName + "\nska gå till";
+                    var message = "Dejtdags!";
                     var applePushNotificationMessage = new ApplePushNotificationMessage(message, match.DatePerson1.FacebookId, MessageType.MatchMaker);
                     _notificationService.Send(applePushNotificationMessage);
                     _logRepository.InsertLog("send notification success to dateperson1 " + match.DatePerson1.FirstName);
 
-                    message = match.MatchMaker.FirstName + " " + match.MatchMaker.LastName + "\n bestämmer att du och" + match.DatePerson1.FirstName + " " + match.DatePerson1.LastName + "\nska gå till";
+                   // message = match.MatchMaker.FirstName + " " + match.MatchMaker.LastName + "\n bestämmer att du och" + match.DatePerson1.FirstName + " " + match.DatePerson1.LastName + "\nska gå till";
                    applePushNotificationMessage = new ApplePushNotificationMessage(message, match.DatePerson2.FacebookId, MessageType.MatchMaker);
                     _notificationService.Send(applePushNotificationMessage);
                     _logRepository.InsertLog("send notification success to dateperson2 "+match.DatePerson2.FirstName);
@@ -148,7 +149,8 @@ namespace youviame.API.Controllers {
                 // send notification to matchmaker when set dates
                 if (match.DatePerson1Status == DatePersonStatus.TimeChosen && match.DatePerson2Status == DatePersonStatus.TimeChosen)
                 {
-                    var message = match.DatePerson1.FirstName + " " + match.DatePerson1.LastName + " & " + match.DatePerson2.FirstName + " " + match.DatePerson2.LastName + "\nhar matchande tider." + "\n Dags för dig att planera deras första dejt!";
+                   // var message = match.DatePerson1.FirstName + " " + match.DatePerson1.LastName + " & " + match.DatePerson2.FirstName + " " + match.DatePerson2.LastName + "\nhar matchande tider." + "\n Dags för dig att planera deras första dejt!";
+                    var message = "Dags för dig att planera deras första dejt!";
                     var applePushNotificationMessage = new ApplePushNotificationMessage(message, match.MatchMaker.FacebookId, MessageType.DatePerson);
                     _notificationService.Send(applePushNotificationMessage);
                     _logRepository.InsertLog("send notification success to matchmaker "+match.MatchMaker.FirstName);
@@ -182,12 +184,14 @@ namespace youviame.API.Controllers {
                 match = _matchRepository.Get(request.MatchId);
                 if (match.DatePerson1Status == DatePersonStatus.Accepted && match.DatePerson2Status == DatePersonStatus.Accepted)
                 {
-                    string message = match.DatePerson2.FirstName + " " + match.DatePerson2.LastName + " \n vill träffa dig med." + "\n Dags att bestämma när ni kan ses"+"\ninom de närmaste 7 dagarna!";
+                   // string message = match.DatePerson2.FirstName + " " + match.DatePerson2.LastName + " \n vill träffa dig med." + "\n Dags att bestämma när ni kan ses"+"\ninom de närmaste 7 dagarna!";
+                    string message = "Dags att bestämma när ni kan ses inom de närmaste 7 dagarna!";
+
                     var applePushNotificationMessage = new ApplePushNotificationMessage(message, match.DatePerson1.FacebookId, MessageType.MatchMaker);
                     _notificationService.Send(applePushNotificationMessage);
                     _logRepository.InsertLog("send notification success to person1 " + match.DatePerson1.FirstName);
 
-                    message = match.DatePerson1.FirstName + " " + match.DatePerson1.LastName + " \n vill träffa dig med." + "\n Dags att bestämma när ni kan ses" + "\ninom de närmaste 7 dagarna!";
+                   // message = match.DatePerson1.FirstName + " " + match.DatePerson1.LastName + " \n vill träffa dig med." + "\n Dags att bestämma när ni kan ses" + "\ninom de närmaste 7 dagarna!";
                     applePushNotificationMessage = new ApplePushNotificationMessage(message, match.DatePerson2.FacebookId, MessageType.MatchMaker);
                     _notificationService.Send(applePushNotificationMessage);
                     _logRepository.InsertLog("send notification success to person2 " + match.DatePerson2.FirstName);
@@ -272,18 +276,67 @@ namespace youviame.API.Controllers {
         }
 
         [HttpGet]
+        [Route("canceldate")]
+        public HttpResponseMessage CancelDates([FromUri] string matchId)
+        {
+            _logRepository.InsertLog("Cancel date requested");
+            try
+            {
+                var guid = Guid.Parse(matchId);
+                var match = _matchRepository.Get(guid);
+                match.DatePerson1Status = DatePersonStatus.Accepted;
+                match.DatePerson1Status = DatePersonStatus.Accepted;
+                match.MatchMakerStatus = MatchMakerStatus.Matched;
+                match.MatchStatus = MatchStatus.DateMissing;
+                match.DatePerson1Dates = "";
+                match.DatePerson2Dates = "";
+                match.Date = 0;
+                match.DatePerson1DateSetCount = 0;
+                match.DatePerson2DateSetCount = 0;
+                match.MatchMakerMessage = "";
+                match.Place = "";
+                _logRepository.InsertLog("before update match");
+                _matchRepository.Update(match);
+                match = _matchRepository.Get(guid);
+                _logRepository.InsertLog("Cancel date requested success");
+
+                string message = "rebook time";
+                var applePushNotificationMessage = new ApplePushNotificationMessage(message, match.DatePerson1.FacebookId, MessageType.MatchMaker);
+                _notificationService.Send(applePushNotificationMessage);
+                _logRepository.InsertLog("send notification success for person1 " + match.DatePerson1.FirstName);
+
+                applePushNotificationMessage = new ApplePushNotificationMessage(message, match.DatePerson2.FacebookId, MessageType.MatchMaker);
+                _notificationService.Send(applePushNotificationMessage);
+                _logRepository.InsertLog("send notification success for person2 " + match.DatePerson2.FirstName);
+
+                applePushNotificationMessage = new ApplePushNotificationMessage(message, match.MatchMaker.FacebookId, MessageType.MatchMaker);
+                _notificationService.Send(applePushNotificationMessage);
+                _logRepository.InsertLog("send notification success for matchmaker " + match.MatchMaker.FirstName);
+
+                return Request.CreateResponse(HttpStatusCode.OK, match);
+            }
+            catch (Exception e) { return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Could not cancel match", e); }
+        }
+
+
+
+        [HttpGet]
         [Route("chat")]
         public HttpResponseMessage GetChat([FromUri] string matchId) {
+            _logRepository.InsertLog("GetChat requested");
             var guid = Guid.Parse(matchId);
             var chatMessages = _chatRepository.Get(guid);
+            _logRepository.InsertLog("GetChat requested success");
             return Request.CreateResponse(HttpStatusCode.OK, chatMessages);
         }
 
         [HttpPost]
         [Route("chat")]
         public async Task<HttpResponseMessage> SendChat([FromBody] ChatMessageRequest message) {
+            _logRepository.InsertLog("SendChat requested ");
             var chatMessage = message.ToChatMessage();
             await _chatRepository.SaveAsync(chatMessage);
+            _logRepository.InsertLog("SendChat requested success ");
             return Request.CreateResponse(HttpStatusCode.Created, chatMessage);
         }
 
@@ -334,11 +387,14 @@ namespace youviame.API.Controllers {
                 _logRepository.InsertLog("send notification");
                 foreach (var item in validMatches)
                 {   
-                    string message="Du har blivit matchad med: \n" +item.DatePerson2.FirstName + " " + item.DatePerson2.LastName + " \n" + item.MatchMaker.FirstName + " " + item.MatchMaker.LastName + " tycker ni ska träffas.";
+                   
+                    //  string message="Du har blivit matchad med: \n" +item.DatePerson2.FirstName + " " + item.DatePerson2.LastName + " \n" + item.MatchMaker.FirstName + " " + item.MatchMaker.LastName + " tycker ni ska träffas.";
+                    string message = "Du har blivit matchad";
                     var applePushNotificationMessage = new ApplePushNotificationMessage(message , item.DatePerson1.FacebookId, MessageType.MatchMaker);
                     _notificationService.Send(applePushNotificationMessage);
                     _logRepository.InsertLog("send notification success for person1 " + item.DatePerson1.FirstName);
-                    message = "Du har blivit matchad med: \n" + item.DatePerson1.FirstName + " " + item.DatePerson1.LastName + " \n" + item.MatchMaker.FirstName + " " + item.MatchMaker.LastName + " tycker ni ska träffas.";
+
+                   // message = "Du har blivit matchad med: \n" + item.DatePerson1.FirstName + " " + item.DatePerson1.LastName + " \n" + item.MatchMaker.FirstName + " " + item.MatchMaker.LastName + " tycker ni ska träffas.";
                      applePushNotificationMessage = new ApplePushNotificationMessage(message, item.DatePerson2.FacebookId, MessageType.MatchMaker);
                     _notificationService.Send(applePushNotificationMessage);
                     _logRepository.InsertLog("send notification success person2 "+item.DatePerson2.FirstName);

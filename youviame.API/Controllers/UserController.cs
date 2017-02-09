@@ -15,39 +15,56 @@ using youviame.Data.Enitities;
 using youviame.Data.Repositories;
 
 namespace youviame.API.Controllers {
-    [Authorize]
+    //[Authorize]
     [RoutePrefix("user")]
     public class UserController : BaseApiController {
 
         private readonly IUserRepository _userRepository;
-
-        public UserController(IUserRepository userRepository) {
+        private readonly ILogRepository _logRepository;
+        public UserController(IUserRepository userRepository, ILogRepository logRepository)
+        {
             _userRepository = userRepository;
+            _logRepository = logRepository;
         }
 
         [Route("update")]
         [HttpPut]
         public async Task<HttpResponseMessage> UpdateProfile([FromBody] UpdateProfileRequest request) {
-            var user = _userRepository.Get(request.UserId);
+            _logRepository.InsertLog("Update Profile requested");
+            Guid id = new Guid("00167701-AA79-4C8E-B3F4-122B09206B66");
+            var user = _userRepository.Get(id); //request.UserId);
             if (user == null)
+            {
+                _logRepository.InsertLog("User does not exist");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User does not exist");
+            }
+            _logRepository.InsertLog("before oldvalues");
             var oldValues = new EditProfileModel {
                 DateModeEnabled = user.DateModeEnabled,
                 Location = user.Location,
                 ProfilePictures = JsonConvert.DeserializeObject<List<Image>>(user.ProfilePictures),
                 AboutMe = user.AboutMe
             };
+            _logRepository.InsertLog("after oldvalues");
+            _logRepository.InsertLog("before about me" +request.Values);
             user.SetAboutMe(request.Values.AboutMe);
+            _logRepository.InsertLog("after about me");
             user.SetDateModeEnabled(request.Values.DateModeEnabled);
+            _logRepository.InsertLog("before profile pictures");
             user.SetProfilePictures(request.Values.ProfilePictures);
+            _logRepository.InsertLog("after profile pictures");
             user.SetLocation(request.Values.Location);
             try {
+                _logRepository.InsertLog("before update async user");
                 await _userRepository.UpdateAsync(user);
+                _logRepository.InsertLog("after update async user");
             }
             catch (Exception) {
+                _logRepository.InsertLog("Could not update user");
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not update user");
             }
             var updateProfileResponse = new UpdateProfileResponse(user.Id, request.Values, oldValues);
+            _logRepository.InsertLog("update user success");
             return Request.CreateResponse(HttpStatusCode.Created,
                 updateProfileResponse);
         }

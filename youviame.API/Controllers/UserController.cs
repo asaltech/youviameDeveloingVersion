@@ -31,8 +31,8 @@ namespace youviame.API.Controllers {
         [HttpPut]
         public async Task<HttpResponseMessage> UpdateProfile([FromBody] UpdateProfileRequest request) {
             _logRepository.InsertLog("Update Profile requested");
-            Guid id = new Guid("00167701-AA79-4C8E-B3F4-122B09206B66");
-            var user = _userRepository.Get(id); //request.UserId);
+        
+            var user = _userRepository.Get(request.UserId);
             if (user == null)
             {
                 _logRepository.InsertLog("User does not exist");
